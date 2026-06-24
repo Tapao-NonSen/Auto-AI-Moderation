@@ -1,4 +1,4 @@
-# tapao/flarum-ext-moderationai
+# tapao/auto-ai-moderation
 
 OpenAI-powered auto-moderation for Flarum. Scans posts, discussion titles, usernames, avatars, uploads, bios, and polls using the OpenAI Moderation API (`omni-moderation-latest`).
 
@@ -22,7 +22,7 @@ OpenAI-powered auto-moderation for Flarum. Scans posts, discussion titles, usern
 ## Installation
 
 ```bash
-composer require tapao/flarum-ext-moderationai
+composer require tapao/auto-ai-moderation
 php flarum migrate
 php flarum assets:publish
 ```
