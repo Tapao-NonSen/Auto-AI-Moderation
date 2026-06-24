@@ -1,0 +1,76 @@
+.ModerationSettingsPage {
+    max-width: 800px;
+
+    h2 {
+        margin-bottom: 1.5rem;
+    }
+
+    h3 {
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        border-bottom: 1px solid #e5e7eb;
+        padding-bottom: 0.5rem;
+    }
+
+    .Form-group {
+        margin-bottom: 1.25rem;
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+        }
+
+        .helpText {
+            font-size: 0.85em;
+            color: #6b7280;
+            margin-top: 0.3rem;
+        }
+    }
+}
+
+.CategoryThresholdRow {
+    padding: 0.25rem 0;
+
+    span:first-child {
+        font-family: monospace;
+        font-size: 0.9em;
+    }
+}
+
+.ModerationLogTable {
+    overflow-x: auto;
+    margin-top: 1rem;
+
+    .Table {
+        width: 100%;
+        border-collapse: collapse;
+
+        th, td {
+            padding: 0.5rem 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 0.9em;
+        }
+
+        th {
+            font-weight: 600;
+            background: #f9fafb;
+        }
+    }
+}
+
+.ModerationLogItem {
+    &.reviewed td {
+        opacity: 0.6;
+    }
+
+    &.pending td {
+        font-weight: 500;
+    }
+
+    .Button {
+        padding: 0.2rem 0.6rem;
+        font-size: 0.8em;
+    }
+}

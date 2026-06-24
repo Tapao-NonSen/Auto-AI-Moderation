@@ -1,0 +1,34 @@
+{
+    "name": "tapao/auto-ai-moderation",
+    "description": "OpenAI-powered auto-moderation for Flarum",
+    "type": "flarum-extension",
+    "license": "MIT",
+    "require": {
+        "flarum/core": ">=1.8.0 <3.0.0",
+        "guzzlehttp/guzzle": "^7.0"
+    },
+    "suggest": {
+        "flarum/flags": "AI flags appear in the moderator flag queue",
+        "blomstra/flarum-ext-upload": "Moderate file uploads before storage",
+        "fof/upload": "Alternative upload extension — same bridge",
+        "fof/user-bio": "Moderate bio field",
+        "fof/polls": "Moderate poll options",
+        "fof/byobu": "Moderate private messages",
+        "fof/profile-image-crop": "Moderate cover photos"
+    },
+    "autoload": {
+        "psr-4": { "Tapao\\ModerationAI\\": "src/" }
+    },
+    "extra": {
+        "flarum-extension": {
+            "title": "ModerationAI",
+            "icon": {
+                "name": "fas fa-shield-alt",
+                "backgroundColor": "#1a1a2e",
+                "color": "#ffffff"
+            }
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

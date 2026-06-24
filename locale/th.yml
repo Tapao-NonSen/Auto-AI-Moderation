@@ -1,0 +1,35 @@
+tapao-moderationai:
+  admin:
+    settings:
+      title: ModerationAI Settings
+      api_key_label: OpenAI API Key
+      api_key_placeholder: "sk-..."
+      model_label: Moderation Model
+      enabled_label: เปิดใช้งานการตรวจสอบเนื้อหาอัตโนมัติ
+      mode_label: "โหมดการตรวจสอบ"
+      mode_sync: "แบบทันที (บล็อกก่อนบันทึก)"
+      mode_async: "แบบเบื้องหลัง (ตรวจสอบหลังบันทึก)"
+      scan_images_label: ตรวจสอบรูปภาพ (ต้องใช้ omni-moderation-latest)
+      scan_private_messages_label: ตรวจสอบข้อความส่วนตัว (fof/byobu)
+      exempt_groups_label: กลุ่มผู้ใช้ที่ได้รับการยกเว้น
+      thresholds_heading: "เกณฑ์คะแนนและการดำเนินการตามหมวดหมู่"
+      trust_skip_threshold_label: "คะแนนความน่าเชื่อถือ - เกณฑ์ข้ามการตรวจสอบ (0–100)"
+      trust_skip_threshold_help: "ผู้ใช้ที่มีคะแนนสูงกว่าค่านี้จะไม่ถูกตรวจสอบโดยระบบ (ระบบความน่าเชื่อถือ)"
+      webhook_url_label: "Webhook URL (ไม่บังคับ)"
+      webhook_url_help: "ส่งข้อมูล JSON ผ่าน POST ทุกครั้งที่พบเนื้อหาที่ถูกตั้งค่าสถานะ"
+      test_connection: ทดสอบการเชื่อมต่อ API
+      connection_ok: "✓ เชื่อมต่อ API สำเร็จ"
+      connection_fail: "✗ เชื่อมต่อ API ไม่สำเร็จ กรุณาตรวจสอบ API Key"
+
+    log:
+      title: บันทึกการตรวจสอบเนื้อหา
+      approve: อนุมัติ
+      reject: ปฏิเสธ (กู้คืนเนื้อหา)
+      escalate: ส่งต่อให้ผู้ดูแลตรวจสอบ
+      pending: รอการตรวจสอบ
+      decision_approved: "✓ อนุมัติแล้ว"
+      decision_rejected: "✗ ปฏิเสธแล้ว (กู้คืนเนื้อหา)"
+
+  forum:
+    post_under_review: "โพสต์ของคุณกำลังอยู่ระหว่างการตรวจสอบโดยระบบ และจะแสดงผลในอีกสักครู่"
+    upload_rejected: "ไฟล์นี้ถูกปฏิเสธโดยระบบตรวจสอบเนื้อหา"
