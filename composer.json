@@ -4,7 +4,7 @@
     "type": "flarum-extension",
     "license": "MIT",
     "require": {
-        "flarum/core": ">=1.8.0 <3.0.0",
+        "flarum/core": "^1.8 || ^2.0",
         "guzzlehttp/guzzle": "^7.0"
     },
     "suggest": {
@@ -14,6 +14,8 @@
         "fof/user-bio": "Moderate bio field",
         "fof/polls": "Moderate poll options",
         "fof/byobu": "Moderate private messages",
+        "fof/warnings": "Warn action issues real fof/warnings strikes",
+        "flarum/suspend": "Warn action falls back to temporary suspension",
         "fof/profile-image-crop": "Moderate cover photos"
     },
     "autoload": {

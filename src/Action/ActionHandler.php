@@ -59,7 +59,7 @@ class ActionHandler
                     'flag'   => $this->flagAction->execute($content, $contentType, $category, $score),
                     'hide'   => $this->hideAction->execute($content),
                     'delete' => $this->deleteAction->execute($content),
-                    'warn'   => $this->warnAction->execute($userToScore),
+                    'warn'   => $this->warnAction->execute($userToScore, $category, $score),
                     default  => null,
                 };
                 $actionTaken = $action;

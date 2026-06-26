@@ -14,7 +14,7 @@ class ListModerationLogsController implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $actor = RequestUtil::getActor($request);
-        $actor->assertCan('administrate');
+        $actor->assertAdmin();
 
         $queryParams = $request->getQueryParams();
         $flaggedOnly = filter_var($queryParams['flagged'] ?? 'true', FILTER_VALIDATE_BOOLEAN);

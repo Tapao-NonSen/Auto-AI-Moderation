@@ -15,10 +15,11 @@ class TestConnectionController implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        RequestUtil::getActor($request)->assertCan('administrate');
+        $actor = RequestUtil::getActor($request);
+        $actor->assertAdmin();
 
         $ok = $this->client->testConnection();
 
-        return new JsonResponse(['success' => $ok], $ok ? 200 : 502);
+        return new JsonResponse(['ok' => $ok], $ok ? 200 : 502);
     }
 }

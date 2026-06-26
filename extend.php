@@ -59,6 +59,24 @@ return [
                          Listener\Bridge\ModerateSavingProfileImage::class),
         ]),
 
+    // ── Bridge: fof/warnings ─────────────────────────────────────────────
+    // WarnUserAction auto-detects fof/warnings at runtime via class_exists();
+    // no extra event listener needed — the bridge is inside WarnUserAction itself.
+    // We only need to expose the extra settings so the admin panel can show them.
+    (new Extend\Conditional())
+        ->whenExtensionEnabled('fof-warnings', fn () => [
+            (new Extend\Settings())
+                ->serializeToForum('moderationai.warn_points',  'moderationai.warn_points',  'intVal', 1)
+                ->serializeToForum('moderationai.warn_reason',  'moderationai.warn_reason',  null, ''),
+        ]),
+
+    // ── Bridge: flarum/suspend ────────────────────────────────────────────
+    (new Extend\Conditional())
+        ->whenExtensionEnabled('flarum-suspend', fn () => [
+            (new Extend\Settings())
+                ->serializeToForum('moderationai.warn_suspend_hours', 'moderationai.warn_suspend_hours', 'intVal', 0),
+        ]),
+
     // ── Admin API Routes (log review queue) ───────────────────────────────
     (new Extend\Routes('api'))
         ->get('/moderation-logs',               'moderationai.logs.index',   Controller\ListModerationLogsController::class)

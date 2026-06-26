@@ -14,7 +14,7 @@ class RejectModerationLogController implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $actor = RequestUtil::getActor($request);
-        $actor->assertCan('administrate');
+        $actor->assertAdmin();
 
         $id  = $request->getAttribute('id');
         $log = ModerationLog::findOrFail($id);
