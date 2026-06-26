@@ -3,6 +3,6 @@ import ModerationSettingsPage from './admin/components/ModerationSettingsPage';
 
 app.initializers.add('tapao-moderationai', () => {
     app.extensionData
-        .for('tapao-moderationai')
+        .for('tapao-auto-ai-moderation')
         .registerPage(ModerationSettingsPage);
 });
