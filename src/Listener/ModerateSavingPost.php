@@ -28,6 +28,7 @@ class ModerateSavingPost
 
         // Exempt admins and configured groups
         $exemptGroups = json_decode($this->settings->get('moderationai.exempt_groups', '[1]'), true);
+        if (!is_array($exemptGroups)) $exemptGroups = [1];
         if ($actor->isAdmin() || $actor->groups()->whereIn('id', $exemptGroups)->exists()) return;
 
         $rawBody   = $post->content ?? '';

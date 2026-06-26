@@ -154,12 +154,23 @@ export default class ModerationSettingsPage extends ExtensionPage {
         this.testStatus = 'Testing…';
         m.redraw();
         try {
-            const response = await fetch('/api/moderationai-test', { method: 'POST' });
-            this.testStatus = response.ok
+            const result: any = await app.request({
+                method: 'POST',
+                url: app.forum.attribute('apiUrl') + '/moderationai-test',
+                body: {
+                    apiKey: this.setting('moderationai.openai_api_key')(),
+                    model: this.setting('moderationai.model')() || 'omni-moderation-latest',
+                },
+            });
+
+            this.testStatus = result && result.ok
                 ? app.translator.trans('tapao-moderationai.admin.settings.connection_ok') as string
-                : app.translator.trans('tapao-moderationai.admin.settings.connection_fail') as string;
-        } catch {
-            this.testStatus = app.translator.trans('tapao-moderationai.admin.settings.connection_fail') as string;
+                : (result?.error || app.translator.trans('tapao-moderationai.admin.settings.connection_fail') as string);
+        } catch (e: any) {
+            const message = e?.response?.error
+                || e?.message
+                || app.translator.trans('tapao-moderationai.admin.settings.connection_fail');
+            this.testStatus = message as string;
         }
         m.redraw();
     }

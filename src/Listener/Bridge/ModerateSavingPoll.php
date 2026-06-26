@@ -18,12 +18,13 @@ class ModerateSavingPoll
         $poll = $event->poll ?? $event->getPoll() ?? null;
         if (!$poll) return;
 
-        $texts = array_filter([
-            $poll->question ?? '',
-            ...array_map(fn($opt) => $opt->answer ?? '', $poll->options ?? []),
-        ]);
+        // $poll->options may be an Eloquent Collection or array; foreach handles both.
+        $texts = [$poll->question ?? ''];
+        foreach ($poll->options ?? [] as $opt) {
+            $texts[] = is_object($opt) ? ($opt->answer ?? '') : (string) $opt;
+        }
 
-        $result = $this->moderator->moderate(array_values($texts));
+        $result = $this->moderator->moderate(array_values(array_filter($texts)));
         if (!$result) return;
 
         $log = ModerationLog::create([

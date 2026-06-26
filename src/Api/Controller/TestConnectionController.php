@@ -18,8 +18,14 @@ class TestConnectionController implements RequestHandlerInterface
         $actor = RequestUtil::getActor($request);
         $actor->assertAdmin();
 
-        $ok = $this->client->testConnection();
+        $body   = (array) $request->getParsedBody();
+        $apiKey = isset($body['apiKey']) ? (string) $body['apiKey'] : null;
+        $model  = isset($body['model'])  ? (string) $body['model']  : null;
 
-        return new JsonResponse(['ok' => $ok], $ok ? 200 : 502);
+        $result = $this->client->testConnection($apiKey, $model);
+
+        // Always return 200 so the frontend can read the error message in the
+        // body; the `ok` flag conveys success/failure.
+        return new JsonResponse($result);
     }
 }

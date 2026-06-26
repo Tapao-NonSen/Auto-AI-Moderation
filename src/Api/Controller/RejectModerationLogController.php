@@ -49,7 +49,9 @@ class RejectModerationLogController implements RequestHandlerInterface
         }
 
         if (method_exists($content, 'restore')) {
+            // Flarum's restore() only mutates the model; it must be persisted.
             $content->restore();
+            $content->save();
         } elseif (property_exists($content, 'hidden_at')) {
             $content->hidden_at = null;
             $content->hidden_by_id = null;
