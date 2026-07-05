@@ -22,7 +22,7 @@ return [
 
     // ── Bridge: blomstra/flarum-ext-upload ────────────────────────────────
     (new Extend\Conditional())
-        ->whenExtensionEnabled('blomstra-upload', fn () => [
+        ->whenExtensionEnabled('blomstra-upload', [
             (new Extend\Event())
                 ->listen(\Blomstra\Upload\Events\UploadingFile::class,
                          Listener\Bridge\ModerateUploadingFile::class),
@@ -30,7 +30,7 @@ return [
 
     // ── Bridge: fof/upload ────────────────────────────────────────────────
     (new Extend\Conditional())
-        ->whenExtensionEnabled('fof-upload', fn () => [
+        ->whenExtensionEnabled('fof-upload', [
             (new Extend\Event())
                 ->listen(\FoF\Upload\Events\UploadingFile::class,
                          Listener\Bridge\ModerateUploadingFile::class),
@@ -38,7 +38,7 @@ return [
 
     // ── Bridge: fof/polls ────────────────────────────────────────────────
     (new Extend\Conditional())
-        ->whenExtensionEnabled('fof-polls', fn () => [
+        ->whenExtensionEnabled('fof-polls', [
             (new Extend\Event())
                 ->listen(\FoF\Polls\Events\SavingPoll::class,
                          Listener\Bridge\ModerateSavingPoll::class),
@@ -46,7 +46,7 @@ return [
 
     // ── Bridge: fof/user-bio ─────────────────────────────────────────────
     (new Extend\Conditional())
-        ->whenExtensionEnabled('fof-user-bio', fn () => [
+        ->whenExtensionEnabled('fof-user-bio', [
             (new Extend\Event())
                 ->listen(\FoF\UserBio\Event\Saving::class,
                          Listener\Bridge\ModerateSavingBio::class),
@@ -54,7 +54,7 @@ return [
 
     // ── Bridge: fof/profile-image-crop ───────────────────────────────────
     (new Extend\Conditional())
-        ->whenExtensionEnabled('fof-profile-image-crop', fn () => [
+        ->whenExtensionEnabled('fof-profile-image-crop', [
             (new Extend\Event())
                 ->listen(\FoF\ProfileImageCrop\Events\SavingProfileImage::class,
                          Listener\Bridge\ModerateSavingProfileImage::class),
@@ -64,20 +64,17 @@ return [
     // WarnUserAction auto-detects fof/warnings at runtime via class_exists();
     // no extra event listener needed — the bridge is inside WarnUserAction itself.
     (new Extend\Conditional())
-        ->whenExtensionEnabled('fof-warnings', fn () => [
+        ->whenExtensionEnabled('fof-warnings', [
             (new Extend\Settings())
-                ->serializeToForum('moderationai.warn_points',  'moderationai.warn_points',  'intval')
-                ->default('moderationai.warn_points', 1)
-                ->serializeToForum('moderationai.warn_reason',  'moderationai.warn_reason')
-                ->default('moderationai.warn_reason', ''),
+                ->serializeToForum('moderationai.warn_points',  'moderationai.warn_points',  'intval', 1)
+                ->serializeToForum('moderationai.warn_reason',  'moderationai.warn_reason',  null, ''),
         ]),
 
     // ── Bridge: flarum/suspend ────────────────────────────────────────────
     (new Extend\Conditional())
-        ->whenExtensionEnabled('flarum-suspend', fn () => [
+        ->whenExtensionEnabled('flarum-suspend', [
             (new Extend\Settings())
-                ->serializeToForum('moderationai.warn_suspend_hours', 'moderationai.warn_suspend_hours', 'intval')
-                ->default('moderationai.warn_suspend_hours', 0),
+                ->serializeToForum('moderationai.warn_suspend_hours', 'moderationai.warn_suspend_hours', 'intval', 0),
         ]),
 
     // ── Moderation Log API (JSON:API resource) ────────────────────────────
@@ -93,8 +90,7 @@ return [
 
     // ── Settings serialized to forum ─────────────────────────────────────
     (new Extend\Settings())
-        ->serializeToForum('moderationai.enabled', 'moderationai.enabled', 'boolval')
-        ->default('moderationai.enabled', false),
+        ->serializeToForum('moderationai.enabled', 'moderationai.enabled', 'boolval', false),
 
     // ── Database Migrations ───────────────────────────────────────────────
 ];
