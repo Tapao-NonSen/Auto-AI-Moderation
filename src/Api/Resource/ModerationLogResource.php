@@ -2,7 +2,7 @@
 
 namespace Tapao\ModerationAI\Api\Resource;
 
-use Flarum\Api\Context;
+use Tobyz\JsonApiServer\Context;
 use Flarum\Api\Endpoint;
 use Flarum\Api\Resource\AbstractDatabaseResource;
 use Flarum\Api\Schema;
