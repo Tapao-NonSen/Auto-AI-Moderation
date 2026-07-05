@@ -2,13 +2,13 @@
 
 namespace Tapao\ModerationAI\Listener;
 
-use Flarum\User\Event\Saving;
+use Flarum\User\Event\Saved;
 use Flarum\Settings\SettingsRepositoryInterface;
 use Tapao\ModerationAI\Moderator\ContentModerator;
 use Tapao\ModerationAI\Action\ActionHandler;
 use Tapao\ModerationAI\Model\ModerationLog;
 
-class ModerateSavingUser
+class ModerateSavedUser
 {
     public function __construct(
         protected ContentModerator $moderator,
@@ -16,7 +16,7 @@ class ModerateSavingUser
         protected SettingsRepositoryInterface $settings,
     ) {}
 
-    public function handle(Saving $event): void
+    public function handle(Saved $event): void
     {
         $user  = $event->user;
         $actor = $event->actor;

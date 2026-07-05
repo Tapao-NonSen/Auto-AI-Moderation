@@ -3,7 +3,8 @@
 use Flarum\Extend;
 use Tapao\ModerationAI\Listener;
 use Tapao\ModerationAI\Console\RetrospectiveScanCommand;
-use Tapao\ModerationAI\Api\Controller;
+use Tapao\ModerationAI\Api\Resource\ModerationLogResource;
+use Tapao\ModerationAI\Api\Controller\TestConnectionController;
 
 return [
     // ── Frontend ──────────────────────────────────────────────────────────
@@ -15,9 +16,9 @@ return [
 
     // ── Core Events ───────────────────────────────────────────────────────
     (new Extend\Event())
-        ->listen(\Flarum\Post\Event\Saving::class,       Listener\ModerateSavingPost::class)
-        ->listen(\Flarum\Discussion\Event\Saving::class, Listener\ModerateSavingDiscussion::class)
-        ->listen(\Flarum\User\Event\Saving::class,       Listener\ModerateSavingUser::class),
+        ->listen(\Flarum\Post\Event\Saved::class,       Listener\ModerateSavedPost::class)
+        ->listen(\Flarum\Discussion\Event\Saved::class, Listener\ModerateSavedDiscussion::class)
+        ->listen(\Flarum\User\Event\Saved::class,       Listener\ModerateSavedUser::class),
 
     // ── Bridge: blomstra/flarum-ext-upload ────────────────────────────────
     (new Extend\Conditional())
@@ -62,7 +63,6 @@ return [
     // ── Bridge: fof/warnings ─────────────────────────────────────────────
     // WarnUserAction auto-detects fof/warnings at runtime via class_exists();
     // no extra event listener needed — the bridge is inside WarnUserAction itself.
-    // We only need to expose the extra settings so the admin panel can show them.
     (new Extend\Conditional())
         ->whenExtensionEnabled('fof-warnings', fn () => [
             (new Extend\Settings())
@@ -77,12 +77,12 @@ return [
                 ->serializeToForum('moderationai.warn_suspend_hours', 'moderationai.warn_suspend_hours', 'intVal', 0),
         ]),
 
-    // ── Admin API Routes (log review queue) ───────────────────────────────
+    // ── Moderation Log API (JSON:API resource) ────────────────────────────
+    new Extend\ApiResource(ModerationLogResource::class),
+
+    // ── Test Connection Route (kept as raw handler — non-CRUD action) ─────
     (new Extend\Routes('api'))
-        ->get('/moderation-logs',               'moderationai.logs.index',   Controller\ListModerationLogsController::class)
-        ->post('/moderation-logs/{id}/approve', 'moderationai.logs.approve', Controller\ApproveModerationLogController::class)
-        ->post('/moderation-logs/{id}/reject',  'moderationai.logs.reject',  Controller\RejectModerationLogController::class)
-        ->post('/moderationai-test',            'moderationai.test',         Controller\TestConnectionController::class),
+        ->post('/moderationai-test', 'moderationai.test', TestConnectionController::class),
 
     // ── Artisan Commands ─────────────────────────────────────────────────
     (new Extend\Console())
@@ -91,4 +91,7 @@ return [
     // ── Settings serialized to forum ─────────────────────────────────────
     (new Extend\Settings())
         ->serializeToForum('moderationai.enabled', 'moderationai.enabled', 'boolVal', false),
+
+    // ── Database Migrations ───────────────────────────────────────────────
+    new Extend\Migration(__DIR__ . '/migrations'),
 ];

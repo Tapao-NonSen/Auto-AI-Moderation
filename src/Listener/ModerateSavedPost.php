@@ -2,7 +2,7 @@
 
 namespace Tapao\ModerationAI\Listener;
 
-use Flarum\Post\Event\Saving;
+use Flarum\Post\Event\Saved;
 use Flarum\Settings\SettingsRepositoryInterface;
 use Tapao\ModerationAI\Moderator\ContentModerator;
 use Tapao\ModerationAI\Action\ActionHandler;
@@ -11,7 +11,7 @@ use Tapao\ModerationAI\Queue\ModerationJob;
 use Tapao\ModerationAI\Trust\UserTrustScore;
 use Illuminate\Contracts\Queue\Queue;
 
-class ModerateSavingPost
+class ModerateSavedPost
 {
     public function __construct(
         protected ContentModerator $moderator,
@@ -21,7 +21,7 @@ class ModerateSavingPost
         protected UserTrustScore $trustScore,
     ) {}
 
-    public function handle(Saving $event): void
+    public function handle(Saved $event): void
     {
         $post  = $event->post;
         $actor = $event->actor;
@@ -36,7 +36,7 @@ class ModerateSavingPost
         $imageUrls = $this->moderator->extractImageUrls($rawBody);
 
         $hash   = $this->moderator->contentHash([$plainText], $imageUrls);
-        $postId = $post->id; // null for brand-new posts (Saving fires before DB insert)
+        $postId = $post->id;
 
         // Skip dedup check for new posts (no ID yet); for edits, skip unchanged content
         if ($postId !== null) {
