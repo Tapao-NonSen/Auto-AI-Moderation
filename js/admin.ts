@@ -4,7 +4,7 @@ import ModerationSettingsPage from './src/admin/components/ModerationSettingsPag
 export { default as extend } from './src/admin/extend';
 
 app.initializers.add('tapao-moderationai', () => {
-  app.extensionData
+  app.registry
     .for('tapao-moderationai')
     .registerPage(ModerationSettingsPage);
 });
