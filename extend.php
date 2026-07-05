@@ -22,7 +22,7 @@ return [
 
     // ── Bridge: blomstra/flarum-ext-upload ────────────────────────────────
     (new Extend\Conditional())
-        ->whenExtensionEnabled('blomstra-upload', [
+        ->whenExtensionEnabled('blomstra-upload', fn () => [
             (new Extend\Event())
                 ->listen(\Blomstra\Upload\Events\UploadingFile::class,
                          Listener\Bridge\ModerateUploadingFile::class),
@@ -30,7 +30,7 @@ return [
 
     // ── Bridge: fof/upload ────────────────────────────────────────────────
     (new Extend\Conditional())
-        ->whenExtensionEnabled('fof-upload', [
+        ->whenExtensionEnabled('fof-upload', fn () => [
             (new Extend\Event())
                 ->listen(\FoF\Upload\Events\UploadingFile::class,
                          Listener\Bridge\ModerateUploadingFile::class),
@@ -38,7 +38,7 @@ return [
 
     // ── Bridge: fof/polls ────────────────────────────────────────────────
     (new Extend\Conditional())
-        ->whenExtensionEnabled('fof-polls', [
+        ->whenExtensionEnabled('fof-polls', fn () => [
             (new Extend\Event())
                 ->listen(\FoF\Polls\Events\SavingPoll::class,
                          Listener\Bridge\ModerateSavingPoll::class),
@@ -46,7 +46,7 @@ return [
 
     // ── Bridge: fof/user-bio ─────────────────────────────────────────────
     (new Extend\Conditional())
-        ->whenExtensionEnabled('fof-user-bio', [
+        ->whenExtensionEnabled('fof-user-bio', fn () => [
             (new Extend\Event())
                 ->listen(\FoF\UserBio\Event\Saving::class,
                          Listener\Bridge\ModerateSavingBio::class),
@@ -54,7 +54,7 @@ return [
 
     // ── Bridge: fof/profile-image-crop ───────────────────────────────────
     (new Extend\Conditional())
-        ->whenExtensionEnabled('fof-profile-image-crop', [
+        ->whenExtensionEnabled('fof-profile-image-crop', fn () => [
             (new Extend\Event())
                 ->listen(\FoF\ProfileImageCrop\Events\SavingProfileImage::class,
                          Listener\Bridge\ModerateSavingProfileImage::class),
@@ -64,7 +64,7 @@ return [
     // WarnUserAction auto-detects fof/warnings at runtime via class_exists();
     // no extra event listener needed — the bridge is inside WarnUserAction itself.
     (new Extend\Conditional())
-        ->whenExtensionEnabled('fof-warnings', [
+        ->whenExtensionEnabled('fof-warnings', fn () => [
             (new Extend\Settings())
                 ->serializeToForum('moderationai.warn_points',  'moderationai.warn_points',  'intval', 1)
                 ->serializeToForum('moderationai.warn_reason',  'moderationai.warn_reason',  null, ''),
@@ -72,7 +72,7 @@ return [
 
     // ── Bridge: flarum/suspend ────────────────────────────────────────────
     (new Extend\Conditional())
-        ->whenExtensionEnabled('flarum-suspend', [
+        ->whenExtensionEnabled('flarum-suspend', fn () => [
             (new Extend\Settings())
                 ->serializeToForum('moderationai.warn_suspend_hours', 'moderationai.warn_suspend_hours', 'intval', 0),
         ]),
