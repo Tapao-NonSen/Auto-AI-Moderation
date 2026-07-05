@@ -49,6 +49,8 @@ class ModerationLogResource extends AbstractDatabaseResource
         if (!empty($params['type'])) {
             $query->where('content_type', $params['type']);
         }
+
+        $query->orderBy('created_at', 'desc');
     }
 
     public function endpoints(): array
@@ -57,7 +59,6 @@ class ModerationLogResource extends AbstractDatabaseResource
             // GET /api/moderation-logs
             Endpoint\Index::make()
                 ->paginate()
-                ->defaultSort('-created_at')
                 ->before(function (Context $context) {
                     $context->getActor()->assertAdmin();
                 }),
