@@ -34,6 +34,20 @@ class ModerationLogResource extends AbstractDatabaseResource
     public function scope(\Illuminate\Database\Eloquent\Builder $query, Context $context): void
     {
         // No additional scoping needed as access is guarded at the endpoint level
+        // But we apply query filters here since $context->query is not available in Endpoint before() hooks
+        $params = $context->request->getQueryParams();
+        $filters = $params['filter'] ?? [];
+
+        // filter[flagged]=1 (default true), filter[flagged]=0 (show all)
+        $flaggedOnly = filter_var($filters['flagged'] ?? 'true', FILTER_VALIDATE_BOOLEAN);
+        if ($flaggedOnly) {
+            $query->where('flagged', true);
+        }
+
+        // filter[type]=post|discussion|user etc.
+        if (!empty($filters['type'])) {
+            $query->where('content_type', $filters['type']);
+        }
     }
 
     public function endpoints(): array
@@ -45,20 +59,6 @@ class ModerationLogResource extends AbstractDatabaseResource
                 ->defaultSort('-created_at')
                 ->before(function (Context $context) {
                     $context->getActor()->assertAdmin();
-
-                    $params = $context->request->getQueryParams();
-                    $filters = $params['filter'] ?? [];
-
-                    // filter[flagged]=1 (default true), filter[flagged]=0 (show all)
-                    $flaggedOnly = filter_var($filters['flagged'] ?? 'true', FILTER_VALIDATE_BOOLEAN);
-                    if ($flaggedOnly) {
-                        $context->query->where('flagged', true);
-                    }
-
-                    // filter[type]=post|discussion|user etc.
-                    if (!empty($filters['type'])) {
-                        $context->query->where('content_type', $filters['type']);
-                    }
                 }),
 
             // PATCH /api/moderation-logs/{id}
