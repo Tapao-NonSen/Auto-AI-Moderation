@@ -93,5 +93,4 @@ return [
         ->serializeToForum('moderationai.enabled', 'moderationai.enabled', 'boolVal', false),
 
     // ── Database Migrations ───────────────────────────────────────────────
-    new Extend\Migration(__DIR__ . '/migrations'),
 ];
