@@ -34,21 +34,21 @@ class ModerationLogResource extends AbstractDatabaseResource
     public function scope(\Illuminate\Database\Eloquent\Builder $query, Context $context): void
     {
         $params = $context->request->getQueryParams();
-        $filters = $params['filter'] ?? [];
 
-        // Apply default logic ONLY if `flagged` filter is NOT provided in the query!
-        // If provided, the Where::make('flagged') filter handles it automatically.
-        if (!isset($filters['flagged'])) {
+        // We use custom query parameters (e.g. ?is_flagged=1) instead of JSON:API standard 
+        // filter parameters (?filter[flagged]=1) to bypass strict filter validation 
+        // without having to register Flarum 2.x Gambit Filterers.
+
+        if (isset($params['is_flagged'])) {
+            $isFlagged = filter_var($params['is_flagged'], FILTER_VALIDATE_BOOLEAN);
+            $query->where('flagged', $isFlagged);
+        } else {
             $query->where('flagged', true);
         }
-    }
 
-    public function filters(): array
-    {
-        return [
-            \Tobyz\JsonApiServer\Laravel\Filter\Where::make('flagged'),
-            \Tobyz\JsonApiServer\Laravel\Filter\Where::make('type', 'content_type'),
-        ];
+        if (!empty($params['type'])) {
+            $query->where('content_type', $params['type']);
+        }
     }
 
     public function endpoints(): array
