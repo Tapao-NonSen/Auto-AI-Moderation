@@ -33,28 +33,21 @@ class ModerationLogResource extends AbstractDatabaseResource
 
     public function scope(\Illuminate\Database\Eloquent\Builder $query, Context $context): void
     {
-        // No additional scoping needed as access is guarded at the endpoint level
-        // But we apply query filters here since $context->query is not available in Endpoint before() hooks
         $params = $context->request->getQueryParams();
         $filters = $params['filter'] ?? [];
 
-        // filter[flagged]=1 (default true), filter[flagged]=0 (show all)
-        $flaggedOnly = filter_var($filters['flagged'] ?? 'true', FILTER_VALIDATE_BOOLEAN);
-        if ($flaggedOnly) {
+        // Apply default logic ONLY if `flagged` filter is NOT provided in the query!
+        // If provided, the Where::make('flagged') filter handles it automatically.
+        if (!isset($filters['flagged'])) {
             $query->where('flagged', true);
-        }
-
-        // filter[type]=post|discussion|user etc.
-        if (!empty($filters['type'])) {
-            $query->where('content_type', $filters['type']);
         }
     }
 
     public function filters(): array
     {
         return [
-            \Tobyz\JsonApiServer\Schema\CustomFilter::make('flagged', fn() => null),
-            \Tobyz\JsonApiServer\Schema\CustomFilter::make('type', fn() => null),
+            \Tobyz\JsonApiServer\Laravel\Filter\Where::make('flagged'),
+            \Tobyz\JsonApiServer\Laravel\Filter\Where::make('type', 'content_type'),
         ];
     }
 
