@@ -22,7 +22,7 @@ class RetrospectiveScanCommand extends AbstractCommand
              ->addOption('since', null, InputOption::VALUE_OPTIONAL, 'Only scan content since date (Y-m-d)');
     }
 
-    protected function fire(): void
+    protected function fire(): int
     {
         $type  = $this->input->getOption('type');
         $limit = (int) $this->input->getOption('limit');
@@ -88,5 +88,6 @@ class RetrospectiveScanCommand extends AbstractCommand
         });
 
         $this->info("Scan complete. Processed $count records.");
+        return 0;
     }
 }
