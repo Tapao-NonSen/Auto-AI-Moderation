@@ -50,6 +50,14 @@ class ModerationLogResource extends AbstractDatabaseResource
         }
     }
 
+    public function filters(): array
+    {
+        return [
+            \Tobyz\JsonApiServer\Schema\CustomFilter::make('flagged', fn() => null),
+            \Tobyz\JsonApiServer\Schema\CustomFilter::make('type', fn() => null),
+        ];
+    }
+
     public function endpoints(): array
     {
         return [
