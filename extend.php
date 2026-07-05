@@ -66,15 +66,18 @@ return [
     (new Extend\Conditional())
         ->whenExtensionEnabled('fof-warnings', fn () => [
             (new Extend\Settings())
-                ->serializeToForum('moderationai.warn_points',  'moderationai.warn_points',  'intVal', 1)
-                ->serializeToForum('moderationai.warn_reason',  'moderationai.warn_reason',  null, ''),
+                ->serializeToForum('moderationai.warn_points',  'moderationai.warn_points',  'intval')
+                ->default('moderationai.warn_points', 1)
+                ->serializeToForum('moderationai.warn_reason',  'moderationai.warn_reason')
+                ->default('moderationai.warn_reason', ''),
         ]),
 
     // ── Bridge: flarum/suspend ────────────────────────────────────────────
     (new Extend\Conditional())
         ->whenExtensionEnabled('flarum-suspend', fn () => [
             (new Extend\Settings())
-                ->serializeToForum('moderationai.warn_suspend_hours', 'moderationai.warn_suspend_hours', 'intVal', 0),
+                ->serializeToForum('moderationai.warn_suspend_hours', 'moderationai.warn_suspend_hours', 'intval')
+                ->default('moderationai.warn_suspend_hours', 0),
         ]),
 
     // ── Moderation Log API (JSON:API resource) ────────────────────────────
@@ -90,7 +93,8 @@ return [
 
     // ── Settings serialized to forum ─────────────────────────────────────
     (new Extend\Settings())
-        ->serializeToForum('moderationai.enabled', 'moderationai.enabled', 'boolVal', false),
+        ->serializeToForum('moderationai.enabled', 'moderationai.enabled', 'boolval')
+        ->default('moderationai.enabled', false),
 
     // ── Database Migrations ───────────────────────────────────────────────
 ];
