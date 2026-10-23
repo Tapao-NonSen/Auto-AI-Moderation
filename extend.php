@@ -3,8 +3,7 @@
 use Flarum\Extend;
 use Tapao\ModerationAI\Listener;
 use Tapao\ModerationAI\Console\RetrospectiveScanCommand;
-use Tapao\ModerationAI\Api\Resource\ModerationLogResource;
-use Tapao\ModerationAI\Api\Controller\TestConnectionController;
+use Tapao\ModerationAI\Api\Controller;
 
 return [
     // ── Frontend ──────────────────────────────────────────────────────────
@@ -12,13 +11,16 @@ return [
         ->js(__DIR__.'/js/dist/admin.js')
         ->css(__DIR__.'/less/admin.less'),
 
+    (new Extend\Frontend('forum'))
+        ->js(__DIR__.'/js/dist/forum.js'),
+
     new Extend\Locales(__DIR__.'/locale'),
 
     // ── Core Events ───────────────────────────────────────────────────────
     (new Extend\Event())
-        ->listen(\Flarum\Post\Event\Saved::class,       Listener\ModerateSavedPost::class)
-        ->listen(\Flarum\Discussion\Event\Saved::class, Listener\ModerateSavedDiscussion::class)
-        ->listen(\Flarum\User\Event\Saved::class,       Listener\ModerateSavedUser::class),
+        ->listen(\Flarum\Post\Event\Saving::class,       Listener\ModerateSavingPost::class)
+        ->listen(\Flarum\Discussion\Event\Saving::class, Listener\ModerateSavingDiscussion::class)
+        ->listen(\Flarum\User\Event\Saving::class,       Listener\ModerateSavingUser::class),
 
     // ── Bridge: blomstra/flarum-ext-upload ────────────────────────────────
     (new Extend\Conditional())
@@ -77,12 +79,13 @@ return [
                 ->serializeToForum('moderationai.warn_suspend_hours', 'moderationai.warn_suspend_hours', 'intval', 0),
         ]),
 
-    // ── Moderation Log API (JSON:API resource) ────────────────────────────
-    new Extend\ApiResource(ModerationLogResource::class),
-
-    // ── Test Connection Route (kept as raw handler — non-CRUD action) ─────
+    // ── Admin API Routes (log review queue & test connection) ─────────────
     (new Extend\Routes('api'))
-        ->post('/moderationai-test', 'moderationai.test', TestConnectionController::class),
+        ->get('/moderation-logs',               'moderationai.logs.index',   Controller\ListModerationLogsController::class)
+        ->post('/moderation-logs/{id}/approve', 'moderationai.logs.approve', Controller\ApproveModerationLogController::class)
+        ->post('/moderation-logs/{id}/reject',  'moderationai.logs.reject',  Controller\RejectModerationLogController::class)
+        ->patch('/moderation-logs/{id}',        'moderationai.logs.update',  Controller\UpdateModerationLogController::class)
+        ->post('/moderationai-test',            'moderationai.test',         Controller\TestConnectionController::class),
 
     // ── Artisan Commands ─────────────────────────────────────────────────
     (new Extend\Console())

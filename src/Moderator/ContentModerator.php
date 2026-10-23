@@ -16,13 +16,16 @@ class ContentModerator
 
     public function moderate(array $textInputs = [], array $imageUrls = [], ?\Flarum\User\User $user = null): ?ModerationResult
     {
-        if (!$this->settings->get('moderationai.enabled', false)) return null;
+        $enabled = $this->settings->get('moderationai.enabled');
+        if ($enabled !== null && !filter_var($enabled, FILTER_VALIDATE_BOOLEAN)) {
+            return null;
+        }
 
         // Phase 5: skip moderation for high-trust users
         if ($user && $this->trustScore->shouldSkip($user)) return null;
 
         // Phase 2: gate image scanning by setting
-        if (!$this->settings->get('moderationai.scan_images', true)) {
+        if (!filter_var($this->settings->get('moderationai.scan_images', true), FILTER_VALIDATE_BOOLEAN)) {
             $imageUrls = [];
         }
 
@@ -43,13 +46,29 @@ class ContentModerator
         return $this->client->moderate($inputs);
     }
 
-    public function extractImageUrls(string $html): array
+    public function extractImageUrls(string $content): array
     {
-        preg_match_all('/<img[^>]+src=["\']([^"\']+)["\'][^>]*>/i', $html, $matches);
-        return array_values(array_filter(
-            $matches[1] ?? [],
+        $urls = [];
+
+        // HTML img tags
+        if (preg_match_all('/<img[^>]+src=["\']([^"\']+)["\'][^>]*>/i', $content, $matches)) {
+            $urls = array_merge($urls, $matches[1] ?? []);
+        }
+
+        // Markdown images: ![alt](url)
+        if (preg_match_all('/!\[.*?\]\((https?:\/\/[^\s\)]+)\)/i', $content, $matches)) {
+            $urls = array_merge($urls, $matches[1] ?? []);
+        }
+
+        // BBCode images: [img]url[/img]
+        if (preg_match_all('/\[img\](https?:\/\/[^\[]+)\[\/img\]/i', $content, $matches)) {
+            $urls = array_merge($urls, $matches[1] ?? []);
+        }
+
+        return array_values(array_unique(array_filter(
+            $urls,
             fn($url) => filter_var($url, FILTER_VALIDATE_URL)
-        ));
+        )));
     }
 
     public function contentHash(array $texts, array $imageUrls = []): string

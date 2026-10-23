@@ -15,22 +15,14 @@ OpenAI-powered auto-moderation for Flarum. Scans posts, discussion titles, usern
 
 ## Requirements
 
-- Flarum >= 2.0 (for `^2.0` tag) or Flarum >= 1.8 (for `^1.0` tag)
-- PHP >= 8.2 (for Flarum 2.0)
+- Flarum >= 1.8
+- PHP >= 8.0
 - OpenAI API key
 
 ## Installation
 
-### For Flarum 2.x (Recommended)
 ```bash
 composer require tapao/auto-ai-moderation
-php flarum migrate
-php flarum assets:publish
-```
-
-### For Flarum 1.x
-```bash
-composer require tapao/auto-ai-moderation:^1.0
 php flarum migrate
 php flarum assets:publish
 ```
@@ -44,7 +36,16 @@ cd js
 npm install
 npm run dev    # watch mode
 npm run build  # production build — commit js/dist/admin.js afterward
+npm test       # verify the distributed admin bundle loads on Flarum 2
 ```
+
+The Flarum 2 frontend requires `flarum-webpack-config` 3.x, which resolves core
+imports through `flarum.reg`. The 2.x compiler emits `flarum.core.compat` imports
+and prevents the settings page from loading on Flarum 2. After frontend changes,
+include the rebuilt `js/dist/admin.js` and `js/dist/admin.js.map` in the package.
+
+After deploying an updated extension, run `php flarum cache:clear` from the forum
+directory and hard-refresh the admin panel to discard cached JavaScript.
 
 ## Configuration
 
